@@ -3,7 +3,9 @@ How do bacterial extracellular Contractile Injection Systems bind target cells?
 A remarkable diversity of receptor binding domains
 
 Nimrod Nachmias1,*, Zhiren Wang2,*, Feng Jiang2,#, and Asaf Levy1,#
+
 1 Department of Plant Pathology and Microbiology, Institute of Environmental Science, The Faculty of Agriculture, Food, and Environment, The Hebrew University of Jerusalem, Rehovot, Israel
+
 2 NHC Key Laboratory of Systems Biology of Pathogens, Key Laboratory of Pathogen Infection Prevention and Control (Ministry of Education), State Key Laboratory of Respiratory Health and Multimorbidity, National Institute of Pathogen Biology, Chinese Academy of Medical Sciences & Peking Union Medical College, Beijing, China
 
 **Abstract**:
