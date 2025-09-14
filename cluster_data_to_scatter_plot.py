@@ -186,7 +186,8 @@ def calculate_cluster_metrics(clusters, protein_lengths, max_coverage=0.6, max_f
             'avg_domain_size': avg_domain_size,
             'avg_coordinate': overall_avg_coord,
             'avg_protein_size': avg_protein_size,
-            'color': relative_position  # Use the relative position for coloring
+            'color': relative_position,  # Use the relative position for coloring
+            'name': cluster['representative']  # Add the cluster name
         })
     
     # Report filtering statistics
@@ -202,7 +203,7 @@ def calculate_cluster_metrics(clusters, protein_lengths, max_coverage=0.6, max_f
     
     return metrics
 
-def plot_clusters(metrics, output_file=None):
+def plot_clusters(metrics, output_file=None, label_top=0):
     if not metrics:
         print("No valid metrics to plot", file=sys.stderr)
         return
@@ -224,8 +225,25 @@ def plot_clusters(metrics, output_file=None):
     
     # Add a size legend
     handles, labels = scatter.legend_elements(prop="sizes", alpha=0.6, 
-                                            num=4, func=lambda s: s/5)
+                                             num=4, func=lambda s: s/5)
     legend = plt.legend(handles, labels, loc="upper right", title="Cluster Size")
+    
+    # Add labels for top clusters
+    if label_top > 0:
+        # Sort metrics by cluster size (descending) and take the top N
+        top_clusters = sorted(metrics, key=lambda m: m['cluster_size'], reverse=True)[:label_top]
+        
+        for cluster in top_clusters:
+            plt.annotate(
+                cluster['name'],  # The text label
+                (cluster['avg_coordinate'], cluster['avg_domain_size']),  # Point to label
+                xytext=(5, 5),  # Text offset
+                textcoords="offset points",  # How to interpret the offset
+                fontsize=9,  # Font size
+                bbox=dict(boxstyle="round,pad=0.3", fc="white", alpha=0.7),  # Text box style
+                ha='left',  # Horizontal alignment
+                va='bottom'  # Vertical alignment
+            )
     
     # Save the figure before showing it
     if output_file:
@@ -247,6 +265,8 @@ def main():
                         help="Maximum allowed ratio of filtered members in a cluster. Default: 0.3")
     parser.add_argument("--domain-size-limit", type=int, default=600,
                         help="Maximum allowed domain size for proteins without length information. Default: 600")
+    parser.add_argument("--label-top", type=int, default=0, 
+                        help="Label the top N largest clusters on the plot. Default: 0 (no labels)")
     args = parser.parse_args()
     
     protein_lengths = {}
@@ -272,7 +292,7 @@ def main():
         sys.exit(1)
     
     print(f"Plotting {len(metrics)} clusters after filtering...", file=sys.stderr)
-    plot_clusters(metrics, output_file=args.output)
+    plot_clusters(metrics, output_file=args.output, label_top=args.label_top)
 
 if __name__ == "__main__":
     main()
